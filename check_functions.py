@@ -1,5 +1,5 @@
 def create_boxes() -> list:
-        """ for stroing tupels of indexes of cells in each box of a Sudoku table """
+        """ for storing tupels of indexes of cells in each box of a Sudoku table """
         boxes = list()
         index_ranges = ((0, 1, 2), (3, 4, 5), (6, 7, 8))
         for i in range(3):
@@ -14,7 +14,7 @@ def create_boxes() -> list:
         return boxes
 
 
-def add(number ,list9x9 , row_index, column_index):
+def add(number, list9x9, row_index, column_index):
     repeated_in_box = None
     repeated_in_row = None
     repeated_in_column = None
@@ -83,3 +83,23 @@ def add(number ,list9x9 , row_index, column_index):
                         return False
                 else:
                     return True
+                
+    if list9x9[row_index, column_index] == "#":
+        list_temp = list9x9.copy()
+        list_temp[row_index][column_index] = number
+        
+        check_b = check_box(row_index, column_index, list9x9, number)
+        check_r = check_column(column_index, list9x9, number)
+        check_c = check_row(row_index, list9x9, number)
+        if check_b and check_r and check_c:
+            list9x9[row_index][column_index] = number
+        else:
+            print("Mistake! number = {number}")
+            if repeated_in_box:
+                print(f"Repeat in the box: cell-row = {repeated_in_box[0]} cell-column = {repeated_in_box[1]}")
+            if repeated_in_row:
+                print(f"Repeat in the row: cell-row = {repeated_in_row[0]} cell-column = {repeated_in_row[1]}")
+            if repeated_in_column:
+                print(f"Repeat in the column: cell-row = {repeated_in_column[0]} cell-column = {repeated_in_column[1]}")
+    else:
+        print("Error! This cell is not empty.")
