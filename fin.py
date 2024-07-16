@@ -156,7 +156,7 @@ def add(number, list9x9, row_index, column_index):
 
 def reset(list_9x9 , unchangable_list):
     "به جز اون مقدارای ثایت بقیه رو پاک می کنه"
-
+    list_9x9 = game 
 
     return "list_9x9_new"
 
