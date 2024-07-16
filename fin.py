@@ -26,11 +26,19 @@ def level_selection() -> list:
     inp = input().upper()
 
     if inp == "E":
-        return random.choice([E1,E2,E3])
+        game = random.choice([E1,E2,E3])
     elif inp == "M":
-        return random.choice([M1,M2,M3])
+        game = random.choice([M1,M2,M3])
     elif inp == "H":
-        return random.choice([H1,H2,H3])
+        game = random.choice([H1,H2,H3])
+
+    unchangable_list = []
+    for Y , i in enumerate(game):
+        for X , j in enumerate(i):
+            if j != "#":
+                unchangable_list.append([Y,X])
+
+    return game , unchangable_list
     
 
 
@@ -51,6 +59,10 @@ def create_boxes() -> list:
 
 
 def add(number, list9x9, row_index, column_index):
+
+    row_index = int(row_index)
+    column_index = int(column_index)
+
     repeated_in_box = None
     repeated_in_row = None
     repeated_in_column = None
@@ -114,13 +126,13 @@ def add(number, list9x9, row_index, column_index):
             if current_cell in box:
                 for cell in box:
                     row_index, column_index = cell[0], cell[1]
-                    if number == list9x9[row_index, column_index]:
+                    if number == list9x9[row_index][column_index]:
                         repeated_in_box = (row_index + 1, column_index + 1)
                         return False
                 else:
                     return True
                 
-    if list9x9[row_index, column_index] == "#":
+    if list9x9[row_index][column_index] == "#":
         list_temp = list9x9.copy()
         list_temp[row_index][column_index] = number
         
@@ -188,17 +200,22 @@ def win_check():
 
 def start_game(list_9x9 , unchangable_list):
     while True:
+        clear()
         show(list_9x9)
-        print("press 'D' to delete a cell")
+        print("\n\npress 'D' to delete a cell")
         print("press 'A' to add a cell")
         print("press 'R' to reset the game")
         inp = input().upper()
+        
         if  inp == "D":
             pass
             # list_9x9 = delete(list_9x9 , unchangable_list , "X" , "Y")
         elif inp == "A":
-            pass
-            # list_9x9 = add(number ,list_9x9 , X , Y)
+            Y = input("please enter row number: ")
+            X = input("please enter column number: ")
+            numb = input("please enter a number")
+            list_new = add(numb ,list_9x9 ,Y,X)
+            
         elif inp == "R":
             pass
             # list_9x9 = reset(list_9x9 , unchangable_list)
@@ -216,7 +233,8 @@ while True:
         inp = input()
 
         if inp.upper() == "S":
-            level_selection()
+            game , unchangable_list = level_selection()
+            start_game(game , unchangable_list)
             clear()
         if inp.upper() == "R":
             print()
