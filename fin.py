@@ -177,8 +177,13 @@ def show(n):
 
 def delete(list_9x9 , unchangable_list, X , Y):
     "list_9x9[x][y] = # اگه مختصات قابل تغییر نبود ارور بده اگه نبود به جای عددش # بزاره" 
+    if  -1 < (X , Y) < 9 :
+        game[Y][X] = "#"
+        return "list_9x9_new"
+    else : 
+        return "The quantity is not acceptable"
 
-    return "list_9x9_new"
+
     
 def win_check():
     pass
