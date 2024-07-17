@@ -1,4 +1,4 @@
-
+from copy import deepcopy
 from os import system
 import random
 from colorama import Fore, Back ,Style
@@ -23,14 +23,19 @@ def level_selection() -> list:
     print("press 'E' for easy game")
     print("press 'M' for medium game")
     print("press 'H' for hard game")
-    inp = input().upper()
+    
 
-    if inp == "E":
-        game = random.choice([E1,E2,E3])
-    elif inp == "M":
-        game = random.choice([M1,M2,M3])
-    elif inp == "H":
-        game = random.choice([H1,H2,H3])
+    while True:
+        inp = input().upper()
+        if inp == "E":
+            game = random.choice([E1,E2,E3])
+            break
+        elif inp == "M":
+            game = random.choice([M1,M2,M3])
+            break
+        elif inp == "H":
+            game = random.choice([H1,H2,H3])
+            break
 
     unchangable_list = []
     for Y , i in enumerate(game):
@@ -59,106 +64,62 @@ def create_boxes() -> list:
 
 
 def add(number, list9x9, row_index, column_index):
-
-    row_index = int(row_index)
-    column_index = int(column_index)
-
-    repeated_in_box = None
-    repeated_in_row = None
-    repeated_in_column = None
     
     
     def check_row(row_index: int, list9x9: list, number: int) -> bool:
-        """ for checking for a repeated number in a row in the table and 
-            assigning the tuple of indexes of that number to a local variable if any
 
-        Args:
-            row_index (int): a number according to user choice for row position
-            list9x9 (list): the table of numbers 
-            number (int): the number that must not be repeated
-
-        Returns:
-            bool: True if there is NO repeated number in the current row else False
-        """
-        nonlocal repeated_in_row
-        for i, num in enumerate(list9x9[row_index]):
-            if num == number:
-                repeated_in_row = (row_index + 1, i + 1)
+        for i in range(9):
+            if list9x9[row_index][i] == number:
+                print(Fore.RED + "conflict in row" , end="")
+                print(Style.RESET_ALL )
                 return False
         return True
-    
+
     def check_column(column_index: int, list9x9: list, number: int) -> bool:
-        """ for checking for a repeated number in a column in the table and 
-            assigning the tuple of indexes of that number to a local variable if any
 
-        Args:
-            column_index (int): a number according to user choice for column position
-            list9x9 (list): the table of numbers 
-            number (int): the number that must not be repeated
-
-        Returns:
-            bool: True if there is NO repeated number in the current column else False
-        """
-        nonlocal repeated_in_column
-        for i, row in enumerate(list9x9):
-            if row[column_index] == number:
-                repeated_in_column = (i + 1, column_index + 1)
+        for i in range(9):
+            if list9x9[i][column_index] == number:
+                print(Fore.RED + "conflict in column" , end="")
+                print(Style.RESET_ALL )
                 return False
         return True
 
+    
     def check_box(row_index: int, column_index: int, list9x9: list, number: int) -> bool:
-        """ for checking for a repeated number in the corresponding box in the table and 
-            assigning the tuple of indexes of that number to a local variable if any
-
-        Args:
-            row_index (int): a number according to user choice for row position
-            column_index (int): a number according to user choice for column position
-            list9x9 (list): the table of numbers _description_
-            number (int): the number that must not be repeated
-            
-        Returns:
-            bool: True if there is NO repeated number in the current box else False
-        """
-        nonlocal repeated_in_box
+        
         boxes = create_boxes()
-        current_cell = (row_index, column_index)
-        for box in boxes:
-            if current_cell in box:
-                for cell in box:
-                    row_index, column_index = cell[0], cell[1]
-                    if number == list9x9[row_index][column_index]:
-                        repeated_in_box = (row_index + 1, column_index + 1)
-                        return False
-                else:
-                    return True
+
+        for i in boxes:
+            for j in i:
+                if j == (row_index,column_index):
+                    box = i
+        for i in box:
+            if list9x9[i[0]][i[1]] == number:
+                print(Fore.RED + "conflict in box" , end="")
+                print(Style.RESET_ALL )
+                return False
+        return True
+
                 
     if list9x9[row_index][column_index] == "#":
-        list_temp = list9x9.copy()
-        list_temp[row_index][column_index] = number
+        list_temp = deepcopy(list9x9)
         
         check_b = check_box(row_index, column_index, list9x9, number)
         check_r = check_column(column_index, list9x9, number)
         check_c = check_row(row_index, list9x9, number)
         if check_b and check_r and check_c:
-            list9x9[row_index][column_index] = number
+            list9x9[row_index][column_index] = number + "G"
+            show(list9x9)
         else:
-            print("Mistake! number = {number}")
-            if repeated_in_box:
-                print(f"Repeat in the box: cell-row = {repeated_in_box[0]} cell-column = {repeated_in_box[1]}")
-            if repeated_in_row:
-                print(f"Repeat in the row: cell-row = {repeated_in_row[0]} cell-column = {repeated_in_row[1]}")
-            if repeated_in_column:
-                print(f"Repeat in the column: cell-row = {repeated_in_column[0]} cell-column = {repeated_in_column[1]}")
+            list_temp[row_index][column_index] = number + "R"
+            show(list_temp)
+
     else:
-        print("Error! This cell is not empty.")
+        print(Fore.YELLOW + "This cell is already filled" , end="")
+        print(Style.RESET_ALL )
+    
+    return list9x9
 
-
-
-def reset(list_9x9 , unchangable_list):
-    "به جز اون مقدارای ثایت بقیه رو پاک می کنه"
-    list_9x9 = game 
-
-    return "list_9x9_new"
 
 def show(n):
     print(Fore.YELLOW + " 1  2  3   4  5  6   7  8  9 \n" , end="")
@@ -170,42 +131,50 @@ def show(n):
         for cnt2 , j in enumerate(i):
             if (cnt2 ) % 3 == 0:
                 print(" ",end="")
-            print(j , end="  " )
+            if len(j) == 2:
+                if j[1] == "R":
+                    print(Fore.RED + f"{j[0]}  " , end="")
+                    print(Style.RESET_ALL , end="")
+                    continue
+                elif j[1] == "G":
+                    print(Fore.GREEN + f"{j[0]}  " , end="")
+                    print(Style.RESET_ALL , end="")
+                    continue
+            print(j , end="  ")
         print(Fore.YELLOW + f"  {cnt+1}" , end="")
         print(Style.RESET_ALL , end="")
+    print("\n")
 
 
 def delete(list_9x9 , unchangable_list, X , Y):
-    "list_9x9[x][y] = # اگه مختصات قابل تغییر نبود ارور بده اگه نبود به جای عددش # بزاره" 
-    if  -1 < (X , Y) < 9 :
-        game[Y][X] = "#"
-        return "list_9x9_new"
-    else : 
-        return "The quantity is not acceptable"
+    for i in unchangable_list:
+        if Y == i[0] and X == i[1]:
+            print("you can not change this cell")
+            return list_9x9
+    list_9x9[Y][X] = "#"
+    return list_9x9
 
 
     
-def win_check():
-    pass
+def win_check(n):
+    for i in n:
+        for j in i:
+            if j.isnumeric():
+                pass
+            else:
+                return False
+    return True
 
-# def add(number ,list_9x9 , X , Y):
-#     "اگه خونه  ای که گفت خالی بود یعنی برابر # بود عدد داده شده رو ثبت کنه اگر نه خظا بده"
-#     if list_9x9[X][Y] == "#":
-#         list_temp = list_9x9.copy()
-#         list_temp[X][Y] = number
 
-#         "اگه هر سه نای این چک ها درست بودن اد کنه اگر نه ارور بده"
-#         if check_box(list_temp) and check_column(list_temp) and check_raw(list_temp):
-#             list_9x9[X][Y] = number
-#         else:
-#             "eror bede"
-#     else:
-#         "eror bede"
 
 
 
 def start_game(list_9x9 , unchangable_list):
+
+    base_game = deepcopy(list_9x9)
+
     while True:
+
         clear()
         show(list_9x9)
         print("\n\npress 'D' to delete a cell")
@@ -214,19 +183,43 @@ def start_game(list_9x9 , unchangable_list):
         inp = input().upper()
         
         if  inp == "D":
-            pass
-            # list_9x9 = delete(list_9x9 , unchangable_list , "X" , "Y")
+            while True:
+                Y = input("please enter row number: ") 
+                X = input("please enter column number: ")
+                if X.isnumeric() and Y.isnumeric():
+                    Y = int(Y) - 1
+                    X = int(X) - 1
+                    if 0 <= X < 9 and 0 <= Y < 9 :
+                        break
+            list_9x9 = delete(list_9x9 , unchangable_list , X , Y)
+            print(Fore.MAGENTA + "press any key to continue" , end="")
+            print(Style.RESET_ALL , end="")
+            input()
         elif inp == "A":
-            Y = input("please enter row number: ")
-            X = input("please enter column number: ")
-            numb = input("please enter a number")
-            list_new = add(numb ,list_9x9 ,Y,X)
+            while True:
+                Y = input("please enter row number: ") 
+                X = input("please enter column number: ")
+                if X.isnumeric() and Y.isnumeric():
+                    Y = int(Y) - 1
+                    X = int(X) - 1
+                    if 0 <= X < 9 and 0 <= Y < 9 :
+                        break
+            numb = input("please enter a number: ")
+            list_9x9 = add(numb ,list_9x9 ,Y,X)
+            
+            print(Fore.MAGENTA + "press any key to continue" , end="")
+            print(Style.RESET_ALL , end="")
+            input()
+            clear()
+
             
         elif inp == "R":
-            pass
-            # list_9x9 = reset(list_9x9 , unchangable_list)
-        if win_check():
-            pass
+            list_9x9 = base_game
+
+        if win_check(list_9x9):
+            clear()
+            print("!!!!!!!You won!!!!!!!")
+            break
            
 #=========================================================== menu asli ===========================================================
 
@@ -243,8 +236,9 @@ while True:
             start_game(game , unchangable_list)
             clear()
         if inp.upper() == "R":
-            print()
+            print("There is'nt any rule")
         if inp.upper() == "Q": 
-            break
+            clear()
+            exit()
         input("press any key to continue")
         clear()
