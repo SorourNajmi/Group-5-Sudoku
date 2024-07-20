@@ -107,7 +107,12 @@ def add(number, list9x9, row_index, column_index):
         check_b = check_box(row_index, column_index, list9x9, number)
         check_r = check_column(column_index, list9x9, number)
         check_c = check_row(row_index, list9x9, number)
-        if check_b and check_r and check_c:
+        bg = check_box(row_index, column_index, list9x9, str(number) + "G")
+        rg = check_column(column_index, list9x9, str(number) + "G")
+        cg = check_row(row_index, list9x9, str(number) + "G")
+
+
+        if check_b and check_r and check_c and bg and cg and rg:
             list9x9[row_index][column_index] = number + "G"
             show(list9x9)
         else:
@@ -186,11 +191,17 @@ def start_game(list_9x9 , unchangable_list):
             while True:
                 Y = input("please enter row number: ") 
                 X = input("please enter column number: ")
-                if X.isnumeric() and Y.isnumeric():
+                numb = input("please enter a number: ")
+                if X.isnumeric() and Y.isnumeric() and numb.isnumeric():
                     Y = int(Y) - 1
                     X = int(X) - 1
-                    if 0 <= X < 9 and 0 <= Y < 9 :
+                    numb = int(numb)
+                    if 0 <= X < 9 and 0 <= Y < 9 and 0 < numb < 10:
                         break
+                    else:
+                        print("enter row , column and number correctly")
+                else:
+                    print("row , column and number must be integers")
             list_9x9 = delete(list_9x9 , unchangable_list , X , Y)
             print(Fore.MAGENTA + "press any key to continue" , end="")
             print(Style.RESET_ALL , end="")
@@ -199,12 +210,17 @@ def start_game(list_9x9 , unchangable_list):
             while True:
                 Y = input("please enter row number: ") 
                 X = input("please enter column number: ")
-                if X.isnumeric() and Y.isnumeric():
+                numb = input("please enter a number: ")
+                if X.isnumeric() and Y.isnumeric() and numb.isnumeric():
                     Y = int(Y) - 1
                     X = int(X) - 1
-                    if 0 <= X < 9 and 0 <= Y < 9 :
+                    if 0 <= X < 9 and 0 <= Y < 9 and 0 < int(numb) < 10:
                         break
-            numb = input("please enter a number: ")
+                    else:
+                        print("enter row , column and number correctly")
+                else:
+                    print("row , column and number must be integers")
+            
             list_9x9 = add(numb ,list_9x9 ,Y,X)
             
             print(Fore.MAGENTA + "press any key to continue" , end="")
