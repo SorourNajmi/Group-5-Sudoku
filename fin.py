@@ -63,10 +63,7 @@ def create_boxes() -> list:
         return boxes
 
 
-def add(number, list9x9, row_index, column_index):
-    
-    
-    def check_row(row_index: int, list9x9: list, number: int) -> bool:
+def check_row(row_index: int, list9x9: list, number: int) -> bool:
 
         for i in range(9):
             if list9x9[row_index][i] == number:
@@ -75,7 +72,7 @@ def add(number, list9x9, row_index, column_index):
                 return False
         return True
 
-    def check_column(column_index: int, list9x9: list, number: int) -> bool:
+def check_column(column_index: int, list9x9: list, number: int) -> bool:
 
         for i in range(9):
             if list9x9[i][column_index] == number:
@@ -84,8 +81,8 @@ def add(number, list9x9, row_index, column_index):
                 return False
         return True
 
-    
-    def check_box(row_index: int, column_index: int, list9x9: list, number: int) -> bool:
+
+def check_box(row_index: int, column_index: int, list9x9: list, number: int) -> bool:
         
         boxes = create_boxes()
 
@@ -99,6 +96,9 @@ def add(number, list9x9, row_index, column_index):
                 print(Style.RESET_ALL )
                 return False
         return True
+
+
+def add(number, list9x9, row_index, column_index):
 
                 
     if list9x9[row_index][column_index] == "#":
